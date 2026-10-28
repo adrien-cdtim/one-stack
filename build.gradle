@@ -1,0 +1,29 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version '2.0.+'
+}
+
+version = mod_version
+group = 'com.mode.uniqueitems'
+base { archivesName = mod_id }
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+
+neoForge {
+    version = neo_version
+    runs {
+        client { client() }
+        server { server() }
+    }
+    mods {
+        "${mod_id}" { sourceSet sourceSets.main }
+    }
+}
+
+repositories { mavenCentral() }
+
+tasks.withType(ProcessResources).configureEach {
+    var props = [mod_id: mod_id, mod_name: mod_name, mod_version: mod_version, neo_version: neo_version]
+    inputs.properties props
+    filesMatching('META-INF/neoforge.mods.toml') { expand props }
+}
